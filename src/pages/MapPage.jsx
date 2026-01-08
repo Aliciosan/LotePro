@@ -15,7 +15,7 @@ export default function MapPage() {
   return (
     <div className="flex flex-col md:flex-row gap-4 h-full w-full animate-fade-in relative">
       
-      {/* Sidebar Filtros (Desktop) */}
+      {/* Sidebar Filtros (Desktop apenas) */}
       <div className="hidden md:flex md:w-64 flex-col gap-3 shrink-0">
         <div className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100">
           <label className="text-xs font-bold text-gray-400 uppercase">Empreendimento</label>
@@ -38,7 +38,7 @@ export default function MapPage() {
       {/* Área do Mapa */}
       <div className="flex-1 bg-white rounded-3xl shadow-sm border border-gray-200 relative overflow-hidden flex items-center justify-center bg-gray-50 min-h-[60vh] md:min-h-0" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/graphy.png')" }}>
         
-        {/* Legenda (Mobile) */}
+        {/* Legenda Flutuante (Mobile) */}
         <div className="md:hidden absolute top-4 left-4 flex gap-2 z-10 pointer-events-none">
            <span className="bg-white/90 backdrop-blur px-2.5 py-1.5 rounded-xl text-[10px] font-bold shadow-sm border border-gray-100 flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald"></div> Livre</span>
            <span className="bg-white/90 backdrop-blur px-2.5 py-1.5 rounded-xl text-[10px] font-bold shadow-sm border border-gray-100 flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-ochre"></div> Reserva</span>
@@ -51,14 +51,17 @@ export default function MapPage() {
             <path d="M0,0 L200,0 L200,150 L0,150 Z" className="lot-shape sold" onClick={() => alert('Lote Vendido')} />
             <text x="100" y="75" fontSize="16" fill="white" textAnchor="middle" fontWeight="bold" pointerEvents="none">L-01</text>
           </g>
+          
           <g transform="translate(280,20)">
             <path d="M0,0 L200,0 L200,150 L0,150 Z" className="lot-shape available drop-shadow-md" onClick={() => openDrawer('L-02', 155000)} />
             <text x="100" y="75" fontSize="16" fill="white" textAnchor="middle" fontWeight="bold" pointerEvents="none">L-02</text>
           </g>
+          
           <g transform="translate(20,230)">
             <path d="M0,0 L200,0 L200,150 L0,150 Z" className="lot-shape reserved" onClick={() => alert('Reservado')} />
             <text x="100" y="75" fontSize="16" fill="white" textAnchor="middle" fontWeight="bold" pointerEvents="none">L-03</text>
           </g>
+          
           <g transform="translate(280,230)">
             <path d="M0,0 L200,0 L200,150 L0,150 Z" className="lot-shape available drop-shadow-md" onClick={() => openDrawer('L-04', 160000)} />
             <text x="100" y="75" fontSize="16" fill="white" textAnchor="middle" fontWeight="bold" pointerEvents="none">L-04</text>
@@ -66,45 +69,38 @@ export default function MapPage() {
         </svg>
       </div>
 
-      {/* OVERLAY */}
+      {/* OVERLAY ESCURO */}
       {selectedLot && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[90] transition-opacity duration-300" onClick={closeDrawer}></div>
       )}
 
-      {/* DRAWER RESPONSIVO (A Mágica acontece aqui) */}
+      {/* DRAWER (Painel de Detalhes) */}
       <div className={`
-          fixed z-[100] bg-white shadow-2xl flex flex-col transition-transform duration-300
-          
-          /* Mobile Retrato (Padrão): Embaixo, largura total */
-          inset-x-0 bottom-0 w-full h-[85dvh] rounded-t-[2rem]
-          ${selectedLot ? 'translate-y-0' : 'translate-y-full'}
-
-          /* Mobile Paisagem: Vira Sidebar na direita! */
-          landscape:inset-y-0 landscape:right-0 landscape:left-auto landscape:bottom-auto 
-          landscape:w-[400px] landscape:h-full landscape:rounded-t-none landscape:rounded-l-3xl
-          ${selectedLot ? 'landscape:translate-x-0' : 'landscape:translate-x-full'}
-
-          /* Desktop: Sidebar na direita (sobrescreve tudo) */
-          md:inset-y-0 md:right-0 md:left-auto md:top-0 md:h-full md:w-[450px] 
-          md:rounded-t-none md:rounded-l-3xl
-          ${selectedLot ? 'md:translate-x-0' : 'md:translate-x-full'}
+          fixed inset-x-0 bottom-0 z-[100]
+          md:absolute md:inset-y-0 md:right-0 md:left-auto md:top-0 md:h-full md:w-[450px]
+          w-full h-[80dvh] md:h-full
+          bg-white shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.3)]
+          transform transition-transform duration-300 cubic-bezier(0.4, 0, 0.2, 1)
+          flex flex-col 
+          rounded-t-[2rem] md:rounded-none md:rounded-l-3xl 
+          ${selectedLot ? 'translate-y-0 md:translate-x-0' : 'translate-y-full md:translate-x-full'}
       `}>
         
         {selectedLot && (
-          <div className="flex flex-col h-full relative overflow-hidden rounded-t-[2rem] md:rounded-none landscape:rounded-none bg-white">
+          <div className="flex flex-col h-full relative overflow-hidden rounded-t-[2rem] md:rounded-none bg-white">
             
-            {/* Fechar */}
+            {/* Botão Fechar */}
             <button onClick={closeDrawer} className="absolute top-4 right-4 z-20 bg-black/20 backdrop-blur p-2 rounded-full text-white hover:bg-navy hover:text-white transition-colors shadow-lg">
                 <X size={20} weight="bold" />
             </button>
             
-            {/* Imagem (Altura inteligente) */}
-            {/* h-48 (mobile) | landscape:h-28 (menor para caber conteúdo) | md:h-72 (desktop grande) */}
-            <div className="shrink-0 relative w-full h-48 landscape:h-28 md:h-72 bg-gray-200 transition-all">
+            {/* IMAGEM DO LOTE */}
+            {/* h-40 no mobile (mais compacta) para caber o botão na tela */}
+            <div className="shrink-0 relative w-full h-40 md:h-64 bg-gray-200">
                <img 
                   src="https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?q=80&w=800&auto=format&fit=crop" 
                   className="w-full h-full object-cover block"
-                  alt="Lote"
+                  alt="Vista do lote"
                />
                <div className="absolute bottom-0 w-full bg-gradient-to-t from-navy via-navy/60 to-transparent p-6 pt-12">
                   <span className="bg-emerald text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase mb-1 inline-block">Disponível</span>
@@ -112,8 +108,8 @@ export default function MapPage() {
                </div>
             </div>
 
-            {/* Conteúdo (Scrollável) */}
-            <div className="flex-1 overflow-y-auto p-6 md:px-8 overscroll-contain">
+            {/* CONTEÚDO SCROLLÁVEL */}
+            <div className="flex-1 overflow-y-auto p-6 md:px-8">
                <div className="flex justify-between items-end mb-6 border-b border-gray-100 pb-4">
                   <div>
                     <p className="text-gray-400 text-xs uppercase font-bold">Valor</p>
@@ -139,16 +135,14 @@ export default function MapPage() {
                   </div>
                </div>
                
-               <p className="text-gray-500 text-sm leading-relaxed mb-4">
-                   Este lote possui excelente localização, próximo à área de lazer e com vista privilegiada para o pôr do sol.
-               </p>
                <p className="text-gray-500 text-sm leading-relaxed">
-                   Documentação 100% regularizada.
+                   Localização privilegiada próxima à área de lazer. Documentação ok.
                </p>
             </div>
 
-            {/* Botão (Fixo) */}
-            <div className="shrink-0 p-6 pt-4 border-t border-gray-100 bg-white pb-safe md:pb-6 z-30">
+            {/* BOTÃO FIXO NO FUNDO */}
+            {/* pb-10: padding extra para área segura do celular */}
+            <div className="shrink-0 p-6 pt-4 border-t border-gray-100 bg-white pb-10 md:pb-6 z-30">
                <button className="w-full bg-navy text-white py-3.5 md:py-4 rounded-2xl font-bold text-sm shadow-xl shadow-navy/20 hover:bg-navy_light transition-all flex items-center justify-center gap-2 active:scale-[0.98]">
                   Iniciar Proposta <ArrowRight weight="bold" />
                </button>
