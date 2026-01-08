@@ -13,11 +13,10 @@ export default function MapPage() {
   };
 
   return (
-    // AJUSTE 1: Altura calculada para não gerar rolagem na página principal no celular
-    <div className="flex flex-col md:flex-row gap-4 h-[calc(100dvh-140px)] md:h-full w-full animate-fade-in relative">
+    <div className="flex flex-col md:flex-row gap-4 h-full w-full animate-fade-in relative">
       
-      {/* Sidebar Filtros (Esquerda - Ocupa pouco espaço no mobile) */}
-      <div className="md:w-64 flex flex-col gap-3 shrink-0">
+      {/* Sidebar Filtros (Desktop apenas) */}
+      <div className="hidden md:flex md:w-64 flex-col gap-3 shrink-0">
         <div className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100">
           <label className="text-xs font-bold text-gray-400 uppercase">Empreendimento</label>
           <select className="w-full mt-2 p-2.5 bg-gray-50 rounded-xl text-sm font-bold text-navy border-none outline-none">
@@ -26,8 +25,7 @@ export default function MapPage() {
           </select>
         </div>
         
-        {/* Lista de Status (Escondida no celular para economizar espaço) */}
-        <div className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 flex-1 overflow-y-auto hidden md:block">
+        <div className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 flex-1 overflow-y-auto">
           <h4 className="font-bold text-navy mb-3 text-sm">Status</h4>
           <div className="space-y-2 text-sm">
              <div className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 cursor-pointer"><div className="w-3 h-3 rounded-full bg-emerald shadow-sm"></div> Disponível</div>
@@ -37,11 +35,11 @@ export default function MapPage() {
         </div>
       </div>
 
-      {/* Área do Mapa (Centro) */}
-      <div className="flex-1 bg-white rounded-3xl shadow-sm border border-gray-200 relative overflow-hidden flex items-center justify-center bg-gray-50" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/graphy.png')" }}>
+      {/* Área do Mapa */}
+      <div className="flex-1 bg-white rounded-3xl shadow-sm border border-gray-200 relative overflow-hidden flex items-center justify-center bg-gray-50 min-h-[60vh] md:min-h-0" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/graphy.png')" }}>
         
-        {/* Legenda Mobile Flutuante (Topo do mapa) */}
-        <div className="md:hidden absolute top-4 left-4 flex gap-2 justify-center z-10 pointer-events-none">
+        {/* Legenda Flutuante (Mobile) */}
+        <div className="md:hidden absolute top-4 left-4 flex gap-2 z-10 pointer-events-none">
            <span className="bg-white/90 backdrop-blur px-2.5 py-1.5 rounded-xl text-[10px] font-bold shadow-sm border border-gray-100 flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald"></div> Livre</span>
            <span className="bg-white/90 backdrop-blur px-2.5 py-1.5 rounded-xl text-[10px] font-bold shadow-sm border border-gray-100 flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-ochre"></div> Reserva</span>
         </div>
@@ -49,7 +47,6 @@ export default function MapPage() {
         <svg viewBox="0 0 500 400" className="w-full h-full" preserveAspectRatio="xMidYMid meet">
           <path d="M250,0 L250,400 M0,200 L500,200" stroke="#f3f4f6" strokeWidth="40" />
           
-          {/* Lotes Interativos */}
           <g transform="translate(20,20)">
             <path d="M0,0 L200,0 L200,150 L0,150 Z" className="lot-shape sold" onClick={() => alert('Lote Vendido')} />
             <text x="100" y="75" fontSize="16" fill="white" textAnchor="middle" fontWeight="bold" pointerEvents="none">L-01</text>
@@ -72,18 +69,18 @@ export default function MapPage() {
         </svg>
       </div>
 
-      {/* OVERLAY (Fundo Escuro quando abre o drawer) */}
+      {/* OVERLAY ESCURO */}
       {selectedLot && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-[3px] z-[90] transition-opacity duration-300" onClick={closeDrawer}></div>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[90] transition-opacity duration-300" onClick={closeDrawer}></div>
       )}
 
-      {/* DRAWER (Painel Deslizante) */}
+      {/* DRAWER (Painel de Detalhes) */}
       <div className={`
-          fixed inset-x-0 bottom-0 
+          fixed inset-x-0 bottom-0 z-[100]
           md:absolute md:inset-y-0 md:right-0 md:left-auto md:top-0 md:h-full md:w-[450px]
-          h-[85dvh] w-full 
-          bg-white shadow-2xl z-[100] 
-          transform transition-transform duration-300 
+          w-full h-[80dvh] md:h-full
+          bg-white shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.3)]
+          transform transition-transform duration-300 cubic-bezier(0.4, 0, 0.2, 1)
           flex flex-col 
           rounded-t-[2rem] md:rounded-none md:rounded-l-3xl 
           ${selectedLot ? 'translate-y-0 md:translate-x-0' : 'translate-y-full md:translate-x-full'}
@@ -98,17 +95,16 @@ export default function MapPage() {
             </button>
             
             {/* IMAGEM DO LOTE */}
-            {/* AJUSTE 2: h-48 no mobile (menor) para sobrar espaço pro texto, h-72 no desktop */}
-            <div className="shrink-0 relative w-full h-48 md:h-72 bg-gray-200">
+            {/* h-40 no mobile (mais compacta) para caber o botão na tela */}
+            <div className="shrink-0 relative w-full h-40 md:h-64 bg-gray-200">
                <img 
                   src="https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?q=80&w=800&auto=format&fit=crop" 
                   className="w-full h-full object-cover block"
                   alt="Vista do lote"
                />
-               <div className="absolute bottom-0 w-full bg-gradient-to-t from-navy via-navy/60 to-transparent p-6 pt-16">
+               <div className="absolute bottom-0 w-full bg-gradient-to-t from-navy via-navy/60 to-transparent p-6 pt-12">
                   <span className="bg-emerald text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase mb-1 inline-block">Disponível</span>
-                  <h2 className="text-3xl font-bold text-white">{selectedLot.id}</h2>
-                  <p className="text-gray-200 text-sm">Residencial Horizonte Sul</p>
+                  <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight">{selectedLot.id}</h2>
                </div>
             </div>
 
@@ -125,29 +121,29 @@ export default function MapPage() {
                   </div>
                </div>
                
-               <h4 className="font-bold text-navy mb-4 text-sm">Características</h4>
-               <div className="grid grid-cols-2 gap-3 mb-6">
+               <h4 className="font-bold text-navy mb-3 text-sm">Características</h4>
+               <div className="grid grid-cols-2 gap-3 mb-4">
                   <div className="bg-lightbg p-3 rounded-2xl flex flex-col gap-1">
-                    <Compass className="text-2xl text-navy mb-1" />
+                    <Compass className="text-xl text-navy mb-1" />
                     <p className="text-[10px] text-gray-500 uppercase font-bold">Posição</p>
                     <p className="text-sm font-semibold">Nascente</p>
                   </div>
                   <div className="bg-lightbg p-3 rounded-2xl flex flex-col gap-1">
-                    <Ruler className="text-2xl text-navy mb-1" />
+                    <Ruler className="text-xl text-navy mb-1" />
                     <p className="text-[10px] text-gray-500 uppercase font-bold">Topografia</p>
                     <p className="text-sm font-semibold">Plana</p>
                   </div>
                </div>
                
                <p className="text-gray-500 text-sm leading-relaxed">
-                   Este lote possui excelente localização, próximo à área de lazer e com vista privilegiada.
+                   Localização privilegiada próxima à área de lazer. Documentação ok.
                </p>
             </div>
 
-            {/* RODAPÉ DO DRAWER (Botão) */}
-            {/* AJUSTE 3: pb-12 para garantir que o botão flutue acima da barra do iPhone */}
-            <div className="shrink-0 p-6 pt-4 border-t border-gray-100 bg-white pb-12 md:pb-6 z-30">
-               <button className="w-full bg-navy text-white py-4 rounded-2xl font-bold text-sm shadow-xl shadow-navy/20 hover:bg-navy_light transition-all flex items-center justify-center gap-2 active:scale-[0.98]">
+            {/* BOTÃO FIXO NO FUNDO */}
+            {/* pb-10: padding extra para área segura do celular */}
+            <div className="shrink-0 p-6 pt-4 border-t border-gray-100 bg-white pb-10 md:pb-6 z-30">
+               <button className="w-full bg-navy text-white py-3.5 md:py-4 rounded-2xl font-bold text-sm shadow-xl shadow-navy/20 hover:bg-navy_light transition-all flex items-center justify-center gap-2 active:scale-[0.98]">
                   Iniciar Proposta <ArrowRight weight="bold" />
                </button>
             </div>
