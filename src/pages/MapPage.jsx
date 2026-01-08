@@ -15,7 +15,7 @@ export default function MapPage() {
   return (
     <div className="flex flex-col md:flex-row gap-4 h-full w-full animate-fade-in relative">
       
-      {/* Sidebar Filtros (Desktop apenas) */}
+      {/* Sidebar Filtros (Apenas Desktop) */}
       <div className="hidden md:flex md:w-64 flex-col gap-3 shrink-0">
         <div className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100">
           <label className="text-xs font-bold text-gray-400 uppercase">Empreendimento</label>
@@ -35,15 +35,16 @@ export default function MapPage() {
         </div>
       </div>
 
-      {/* Área do Mapa */}
+      {/* Área do Mapa (Responsivo) */}
       <div className="flex-1 bg-white rounded-3xl shadow-sm border border-gray-200 relative overflow-hidden flex items-center justify-center bg-gray-50 min-h-[60vh] md:min-h-0" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/graphy.png')" }}>
         
-        {/* Legenda Flutuante (Mobile) */}
+        {/* Legenda Flutuante (Apenas Mobile) */}
         <div className="md:hidden absolute top-4 left-4 flex gap-2 z-10 pointer-events-none">
            <span className="bg-white/90 backdrop-blur px-2.5 py-1.5 rounded-xl text-[10px] font-bold shadow-sm border border-gray-100 flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald"></div> Livre</span>
            <span className="bg-white/90 backdrop-blur px-2.5 py-1.5 rounded-xl text-[10px] font-bold shadow-sm border border-gray-100 flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-ochre"></div> Reserva</span>
         </div>
 
+        {/* SVG do Mapa */}
         <svg viewBox="0 0 500 400" className="w-full h-full" preserveAspectRatio="xMidYMid meet">
           <path d="M250,0 L250,400 M0,200 L500,200" stroke="#f3f4f6" strokeWidth="40" />
           
@@ -69,18 +70,18 @@ export default function MapPage() {
         </svg>
       </div>
 
-      {/* OVERLAY ESCURO */}
+      {/* OVERLAY ESCURO (Fundo) */}
       {selectedLot && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[90] transition-opacity duration-300" onClick={closeDrawer}></div>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-[3px] z-[90] transition-opacity duration-300" onClick={closeDrawer}></div>
       )}
 
       {/* DRAWER (Painel de Detalhes) */}
       <div className={`
           fixed inset-x-0 bottom-0 z-[100]
           md:absolute md:inset-y-0 md:right-0 md:left-auto md:top-0 md:h-full md:w-[450px]
-          w-full h-[80dvh] md:h-full
+          w-full h-[85dvh] md:h-full
           bg-white shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.3)]
-          transform transition-transform duration-300 cubic-bezier(0.4, 0, 0.2, 1)
+          transform transition-transform duration-300 cubic-bezier(0.2, 0.8, 0.2, 1)
           flex flex-col 
           rounded-t-[2rem] md:rounded-none md:rounded-l-3xl 
           ${selectedLot ? 'translate-y-0 md:translate-x-0' : 'translate-y-full md:translate-x-full'}
@@ -95,21 +96,23 @@ export default function MapPage() {
             </button>
             
             {/* IMAGEM DO LOTE */}
-            {/* h-40 no mobile (mais compacta) para caber o botão na tela */}
-            <div className="shrink-0 relative w-full h-40 md:h-64 bg-gray-200">
+            {/* h-48 no mobile é ideal para manter espaço pro conteúdo */}
+            <div className="shrink-0 relative w-full h-48 md:h-72 bg-gray-200">
                <img 
                   src="https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?q=80&w=800&auto=format&fit=crop" 
                   className="w-full h-full object-cover block"
                   alt="Vista do lote"
                />
-               <div className="absolute bottom-0 w-full bg-gradient-to-t from-navy via-navy/60 to-transparent p-6 pt-12">
+               <div className="absolute bottom-0 w-full bg-gradient-to-t from-navy via-navy/60 to-transparent p-6 pt-16">
                   <span className="bg-emerald text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase mb-1 inline-block">Disponível</span>
                   <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight">{selectedLot.id}</h2>
+                  <p className="text-gray-200 text-sm">Residencial Horizonte Sul</p>
                </div>
             </div>
 
             {/* CONTEÚDO SCROLLÁVEL */}
-            <div className="flex-1 overflow-y-auto p-6 md:px-8">
+            {/* flex-1 overflow-y-auto permite rolar apenas essa área se o texto for grande */}
+            <div className="flex-1 overflow-y-auto p-6 md:px-8 overscroll-contain">
                <div className="flex justify-between items-end mb-6 border-b border-gray-100 pb-4">
                   <div>
                     <p className="text-gray-400 text-xs uppercase font-bold">Valor</p>
@@ -135,13 +138,16 @@ export default function MapPage() {
                   </div>
                </div>
                
+               <p className="text-gray-500 text-sm leading-relaxed mb-4">
+                   Este lote possui excelente localização, próximo à área de lazer e com vista privilegiada para o pôr do sol. O terreno é plano, facilitando a construção e reduzindo custos com terraplanagem.
+               </p>
                <p className="text-gray-500 text-sm leading-relaxed">
-                   Localização privilegiada próxima à área de lazer. Documentação ok.
+                   Documentação 100% regularizada e pronta para financiamento bancário.
                </p>
             </div>
 
-            {/* BOTÃO FIXO NO FUNDO */}
-            {/* pb-10: padding extra para área segura do celular */}
+            {/* BOTÃO FIXO (RODAPÉ) */}
+            {/* pb-safe/pb-8 garante que não cole na borda em telas menores */}
             <div className="shrink-0 p-6 pt-4 border-t border-gray-100 bg-white pb-10 md:pb-6 z-30">
                <button className="w-full bg-navy text-white py-3.5 md:py-4 rounded-2xl font-bold text-sm shadow-xl shadow-navy/20 hover:bg-navy_light transition-all flex items-center justify-center gap-2 active:scale-[0.98]">
                   Iniciar Proposta <ArrowRight weight="bold" />
