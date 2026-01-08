@@ -68,24 +68,23 @@ export default function MapPage() {
         </svg>
       </div>
 
-      {/* Drawer Overlay */}
+      {/* Drawer Overlay (Fundo Escuro) */}
       {selectedLot && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-[2px] z-[60] transition-opacity duration-300" onClick={closeDrawer}></div>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-[3px] z-[90] transition-opacity duration-300" onClick={closeDrawer}></div>
       )}
 
-      {/* Drawer Panel (Mobile Bottom Sheet / Desktop Sidebar) */}
-      {/* CORREÇÃO 1: Usar h-[90dvh] para altura dinâmica correta em celulares */}
-      <div className={`fixed inset-x-0 bottom-0 md:inset-y-0 md:right-0 md:left-auto md:w-[450px] bg-white shadow-2xl z-[70] transform transition-transform duration-300 flex flex-col md:rounded-l-3xl rounded-t-3xl h-[90dvh] md:h-full ${selectedLot ? 'translate-y-0 md:translate-x-0' : 'translate-y-full md:translate-x-full md:translate-y-0'}`}>
+      {/* Drawer Panel (Painel de Detalhes) */}
+      {/* CORREÇÃO 1: z-[100] garante que fique acima do menu do rodapé */}
+      <div className={`fixed inset-x-0 bottom-0 md:inset-y-0 md:right-0 md:left-auto md:w-[450px] bg-white shadow-2xl z-[100] transform transition-transform duration-300 flex flex-col md:rounded-l-3xl rounded-t-[2rem] h-[85dvh] md:h-full ${selectedLot ? 'translate-y-0 md:translate-x-0' : 'translate-y-full md:translate-x-full md:translate-y-0'}`}>
         {selectedLot && (
-          <div className="h-full flex flex-col relative bg-white rounded-t-3xl md:rounded-none overflow-hidden">
+          <div className="h-full flex flex-col relative bg-white rounded-t-[2rem] md:rounded-none overflow-hidden">
             
             {/* Botão Fechar */}
             <button onClick={closeDrawer} className="absolute top-4 right-4 z-20 bg-black/20 backdrop-blur p-2 rounded-full text-white hover:bg-navy hover:text-white transition-colors shadow-lg">
                 <X size={20} weight="bold" />
             </button>
             
-            {/* Imagem do Lote */}
-            {/* CORREÇÃO 2: landscape:h-28 diminui a imagem quando gira a tela */}
+            {/* Imagem do Lote - Com ajuste para modo Paisagem (landscape) */}
             <div className="h-56 landscape:h-28 md:h-72 relative shrink-0 transition-all duration-300">
                <img src="https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover" />
                <div className="absolute bottom-0 w-full bg-gradient-to-t from-navy via-navy/60 to-transparent p-6 pt-16">
@@ -96,7 +95,6 @@ export default function MapPage() {
             </div>
 
             {/* Conteúdo com Scroll */}
-            {/* min-h-0 ajuda o flexbox a entender que pode encolher essa área */}
             <div className="flex-1 overflow-y-auto p-6 md:px-8 min-h-0">
                <div className="flex justify-between items-end mb-6 border-b border-gray-100 pb-4">
                   <div><p className="text-gray-400 text-xs uppercase font-bold">Valor</p><h3 className="text-2xl font-bold text-navy">R$ {selectedLot.price.toLocaleString('pt-BR')}</h3></div>
@@ -112,8 +110,7 @@ export default function MapPage() {
                </p>
             </div>
 
-            {/* Rodapé Fixo (Botão) */}
-            {/* CORREÇÃO 3: pb-8 garante espaço extra no fundo para não colar na borda do celular */}
+            {/* Rodapé Fixo (Botão) - Aumentei o padding-bottom (pb-8) para afastar da borda */}
             <div className="p-6 pt-4 border-t border-gray-100 bg-white md:rounded-bl-3xl shrink-0 pb-8 md:pb-6 z-30">
                <button className="w-full bg-navy text-white py-4 rounded-2xl font-bold text-sm shadow-xl shadow-navy/20 hover:bg-navy_light transition-all flex items-center justify-center gap-2 active:scale-[0.98]">
                   Iniciar Proposta <ArrowRight weight="bold" />
